@@ -1,0 +1,18 @@
+<main class="text-center" ng-controller="AddModelCtrl">
+<form class="form-signin col-md-8 col-md-offset-2 col-xs-12  col-lg-6 col-lg-offset-3 mx-auto">
+    <div class="text-center mb-4">
+        <h1 class="h3 mb-3 font-weight-normal">Añadir modelo</h1>
+        <p>Usa este formulario para cargar un nuevo modelo a la base de datos</p>
+    </div>
+    <div class="form-label-group text-left mb-3">
+        <label for="inputName">Nombre</label>
+        <input type="text" id="inputName" class="form-control" placeholder="Nombre" required="" autofocus="">
+    </div>
+
+    <div class="form-label-group text-left mb-3">
+        <label for="inputFile">Archivo del modelo</label>
+        <input type="file" id="inputFile" class="form-control" placeholder="Ruta del archivo" required="" accept=".obj">
+    </div>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Subir</button>
+</form>
+</main>

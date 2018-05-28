@@ -1,16 +1,17 @@
 const path = require('path');
 const webpack = require("webpack");
-const html_webpack = require('html-webpack-plugin')
+const html_webpack = require('html-webpack-plugin');
+
+const MODE = 'development'; // 'production';
 
 const CODE_FOLDER = path.resolve(__dirname, './src/');
 const DIST_FOLDER = path.resolve(__dirname, './dist/');
 
 module.exports = {
-    mode: 'development',
+    mode: MODE,
     entry: {
         app: path.join(CODE_FOLDER, "./app/main.js"),
-        style: path.join(CODE_FOLDER, "./styles/main.scss"),
-        view: path.join(CODE_FOLDER, "./views/main.html")
+        style: path.join(CODE_FOLDER, "./styles/main.scss")
     },
     module: {
         rules: [{
@@ -28,7 +29,7 @@ module.exports = {
         },
         {
             test: /\.html$/,
-            use: [{ loader: "html-loader" }]
+            use: [{ loader: "html-loader", options: { interpolate: true, minimize: MODE !== 'development', removeComments: MODE !== 'development' } }]
         }]
     },
     plugins: [

@@ -4,7 +4,7 @@
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>PanaViewer</title>
+      <title>Web 3D Viewer</title>
       <link rel="icon" href="favicon.ico">
 
       <!-- Common meta -->
@@ -12,15 +12,29 @@
       <meta name="description" content="Visualizador de modelos 3D">
       <meta name="author" content="Aitor González Fernández, info@aitorgf.com">
 </head>
-<body>
+<body ng-app="3dviewer">
     <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-        <h5 class="my-0 mr-md-auto font-weight-normal">PanaViewer</h5>
+        <h5 class="my-0 mr-md-auto font-weight-normal">Web 3D Viewer</h5>
         <nav class="my-2 my-md-0 mr-md-3">
-            <a class="p-2 text-dark" href="#">+</a>
-            <a class="p-2 text-dark" href="#">Modelos</a>
+            <a class="p-2 text-dark" href="#!/model/add" title="Nuevo modelo">+</a>
+            <a class="p-2 text-dark" href="#!/model/list" title="Lista de modelos">Índice</a>
         </nav>
-        <a class="btn btn-outline-primary" href="#">Registrarse</a>
+        <!--<a class="btn btn-outline-primary" href="#sign">Registrarse</a>-->
     </div>
-    <div class="view" ng-view></div>
+    <div class="container container-fluid view" ng-view></div>
+
+    <!-- Import angular views -->
+    <script type=text/ng-template id=home.html>
+        ${require('./app/home/view.html')}
+    </script>
+    <script type=text/ng-template id=list_model.html>
+        ${require('./app/list_model/view.html')}
+    </script>
+    <script type=text/ng-template id=add_model.html>
+        ${require('./app/add_model/view.html')}
+    </script>
+    <script type=text/ng-template id=view_model.html>
+        ${require('./app/view_model/view.html')}
+    </script>
 </body>
 </html>

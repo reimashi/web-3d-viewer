@@ -4,14 +4,23 @@ import 'bootstrap';
 import 'angular';
 import 'angular-route';
 
+import './home/controller.js';
+import './list_model/controller.js';
+import './view_model/controller.js';
+import './add_model/controller.js';
+
 // Declare app level module which depends on views, and components
 angular.module('3dviewer', [
     'ngRoute',
+    '3dviewer.home',
+    '3dviewer.list_model',
+    '3dviewer.add_model',
+    '3dviewer.view_model',
 ])
     .config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {
         $locationProvider.hashPrefix('!');
 
-        $routeProvider.otherwise({redirectTo: '/home'});
+        $routeProvider.otherwise({redirectTo: '/'});
     }])
 
     .controller('MenuCtrl', ["$scope", "$route", function($scope, $route) {
