@@ -1,14 +1,16 @@
-import ResObserver from 'resize-observer';
+import ResObserver from './ResizeObserver';
 import {
     AmbientLight,
     Loader,
     LoadingManager,
-    Mesh,
     PerspectiveCamera,
     PointLight,
     Scene,
     WebGLRenderer,
 } from 'three';
+import EventEmitter from "./EventEmitter";
+import TrackballControls from "./TrackballControls";
+import OBJLoader from "./OBJLoader";
 
 /**
  * 3D Model player over threejs and webGl
@@ -20,22 +22,23 @@ class Player3D {
      * @param {Element} domElement - Element within which the player will be created
      */
     constructor(domElement) {
-        this.container = document.createElement('div');
-        domElement.appendChild(this.container);
+        this._eventEmitter = new EventEmitter();
+
+        this.container = domElement;
 
         this.fps = 25;
 
         this.width = this.container.offsetWidth;
         this.height = this.container.offsetHeight;
 
-        this.center = {
-            x: this.width / 2,
-            y: this.height / 2
-        };
+        this._log("Renderizando en contenedor de", this.width, "x", this.height);
+
+        this.center = { x: this.width / 2, y: this.height / 2 };
         this.mouse = { x: this.center.x, y: this.center.y };
 
         this.camera = new PerspectiveCamera(45, this.width / this.height, 1, 2000);
         this.camera.position.z = 250;
+        this.camera.position.y = -(this.height / 2) + 20;
 
         this.scene = new Scene();
 
@@ -43,6 +46,15 @@ class Player3D {
         let pointLight = new PointLight(0xffffff, 0.8);
         this.scene.add(ambientLight);
         this.camera.add(pointLight);
+
+        this.control = new TrackballControls(this.camera, this.container);
+        this.control.rotateSpeed = 5.0;
+        this.control.zoomSpeed = 3.2;
+        this.control.panSpeed = 0.8;
+        this.control.noZoom = false;
+        this.control.noPan = true;
+        this.control.staticMoving = false;
+        this.control.dynamicDampingFactor = 0.2;
 
         this.scene.add(this.camera);
 
@@ -55,6 +67,16 @@ class Player3D {
         document.addEventListener('mousemove', Player3D.onDocumentMouseMove(this), false);
         this.resizeObserver = new ResObserver(Player3D.onElementResize(this));
         this.resizeObserver.observe(this.container);
+
+        this._eventEmitter.emit("loaded");
+    }
+
+    /**
+     * Get the event subscriber
+     * @returns {EventSubscriber}
+     */
+    get events() {
+        return this._eventEmitter.subscriber;
     }
 
     /**
@@ -67,16 +89,12 @@ class Player3D {
         let manager = new LoadingManager();
         manager.onProgress = console.log;
 
-        let loader = new Loader.OBJLoader(manager);
+        let loader = new OBJLoader(manager);
         loader.load(url, function (object) {
-            object.traverse( function (child) {
-                if (child instanceof Mesh) {
-                    child.material.map = texture;
-                }
-            } );
-            object.position.y = - 95;
             context.scene.add(object);
-        }, onProgress, onError );
+            context.control.reset();
+            context._eventEmitter.emit("model-loaded");
+        }, manager.onProgress, manager.onError );
     }
 
     /**
@@ -119,7 +137,7 @@ class Player3D {
         context.camera.aspect = context.width / context.height;
         context.camera.updateProjectionMatrix();
 
-        context.renderer.setSize(context.width, context.height);
+        //context.renderer.setSize(context.width, context.height);
     }}
 
     /**
@@ -140,6 +158,14 @@ class Player3D {
     start() { Player3D._runContext(this)(); }
 
     /**
+     * Log info about the current player
+     * @private
+     */
+    _log() {
+        console.log.apply(this, ["[Player3D]"].concat(Array.from(arguments)));
+    }
+
+    /**
      * Internal render logic
      * @param {Player3D} context - Instance of the player
      * @returns {Function}
@@ -150,8 +176,9 @@ class Player3D {
         requestAnimationFrame(() => { setTimeout(Player3D._runContext(context), 1000 / context.fps); });
 
         // Render logic
-        context.camera.position.x += (context.mouse.x - context.camera.position.x) * .05;
-        context.camera.position.y += (-context.mouse.y - context.camera.position.y) * .05;
+        context.control.update();
+        //context.camera.position.x += (context.mouse.x - context.camera.position.x) * .05;
+        //context.camera.position.y += (-context.mouse.y - context.camera.position.y) * .05;
         context.camera.lookAt(context.scene.position);
         context.renderer.render(context.scene, context.camera);
     };}
