@@ -1,6 +1,9 @@
-let ResObserver = null;
 if ((typeof ResizeObserver) === "undefined") {
-    ResObserver = class ResizeObserver {
+    /**
+     * "Emulate" the ResizeObserver API, that emit a event when a DOM Element is resized.
+     * (Only the last versions of Google Chrome has a native implementation)
+     */
+    class ResizeObserver {
         constructor(cb) {
             this.cb = cb;
             this.entries = [];
@@ -10,8 +13,5 @@ if ((typeof ResizeObserver) === "undefined") {
         observe(entry) { this.entries.push(entry); }
     }
 }
-else {
-    ResObserver = ResizeObserver;
-}
 
-export default ResObserver;
+export default ResizeObserver;
