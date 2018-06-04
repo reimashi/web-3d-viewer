@@ -1,0 +1,46 @@
+<div class="row" ng-controller="ListModelCtrl">
+    <main role="main" class="col-md-12">
+        <h2>Lista de modelos</h2>
+        <div class="table-responsive">
+            <table class="table table-striped table-sm">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Archivos</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="model in models">
+                    <td>{{model.id}}</td>
+                    <td>{{model.name}}</td>
+                    <td>
+                        <span class="badge badge-info" ng-if="model.obj">OBJ <span ng-if="model.obj_size" class="badge badge-light">{{model.obj_size | bytes}}</span></span>
+                        <span class="badge badge-info" ng-if="model.mtl">MTL <span ng-if="model.mtl_size" class="badge badge-light">{{model.mtl_size | bytes}}</span></span>
+                    </td>
+                    <td>
+                        <a class="btn btn-info" title="Previsualizar" href="#!/model/{{model.id}}">Previsualizar</a>
+                        <button class="btn btn-primary" title="Descargar" ng-click="download(model.id)">Descargar</button>
+                        <button class="btn btn-danger" title="Borrar" ng-click="delete(model.id)">Borrar</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div ng-if="models.length == 0 && !updating" class="alert alert-info" role="alert">No hay ningún elemento. Empieza por <a href="#!/model/add">añadir uno</a>.</div>
+        <div ng-if="updating" class="ng-cloak">
+            <div class="sk-cube-grid">
+                <div class="sk-cube sk-cube1"></div>
+                <div class="sk-cube sk-cube2"></div>
+                <div class="sk-cube sk-cube3"></div>
+                <div class="sk-cube sk-cube4"></div>
+                <div class="sk-cube sk-cube5"></div>
+                <div class="sk-cube sk-cube6"></div>
+                <div class="sk-cube sk-cube7"></div>
+                <div class="sk-cube sk-cube8"></div>
+                <div class="sk-cube sk-cube9"></div>
+            </div>
+        </div>
+    </main>
+</div>

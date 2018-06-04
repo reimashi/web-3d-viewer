@@ -157,6 +157,14 @@ class Player3D {
      */
     start() { Player3D._runContext(this)(); }
 
+    show() {
+        this.container.style.display = 'inherit';
+    }
+
+    hide() {
+        this.container.style.display = 'none';
+    }
+
     /**
      * Log info about the current player
      * @private
