@@ -1,10 +1,11 @@
-import Controllers.Model3D;
+import controllers.Model3D;
 import spark.Spark;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Paths;
 
 public class Main {
     final static int PORT = 4080;
@@ -18,6 +19,10 @@ public class Main {
             File staticDir = new File("../client/dist");
             Spark.staticFiles.externalLocation(staticDir.getCanonicalPath());
             System.out.println("Serving static files from " + staticDir.getCanonicalPath() + "");
+
+            File uploadDir = Paths.get(staticDir.getCanonicalPath(), Model3D.UPLOAD_DIR_NAME).toFile();
+            Model3D.UPLOAD_DIR = uploadDir;
+            System.out.println("The upload files will be stored in " + uploadDir.getCanonicalPath() + "");
         }
         catch (IOException e) {
             System.err.println("Server can't locate the static files directory");
