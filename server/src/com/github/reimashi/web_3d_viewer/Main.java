@@ -37,6 +37,10 @@ public class Main {
             WEB_PASS = System.getenv("STATIC_PATH");
         }
 
+        if (System.getenv().containsKey("DATABASE_PATH")) {
+            models.Connector.DB_FILE_PATH = System.getenv("DATABASE_PATH");
+        }
+
         // Init web service
         Service service = Service.ignite();
 

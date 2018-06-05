@@ -8,8 +8,8 @@ import java.sql.SQLException;
 /**
  * SQLite database connector
  */
-class Connector {
-    public static final String DB_FILE_NAME = "panaviewer.db";
+public class Connector {
+    private static final String DB_FILE_NAME = "web_3d_viewer.db";
     public static String DB_FILE_PATH = "./";
 
     private static Connector INSTANCE = null;
