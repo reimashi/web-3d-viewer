@@ -11,7 +11,7 @@ angular.module('3dviewer.add_model', ['ngRoute'])
     }])
 
     .controller('AddModelCtrl', ["$scope", "$http", function($scope, $http) {
-        $scope.addForm = { name: "", obj: "", mtl: "" };
+        $scope.addForm = { name: "", obj: null, mtl: null };
         $scope.uploading = false;
 
         /**

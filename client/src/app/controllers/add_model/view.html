@@ -5,8 +5,8 @@
         <p>Usa este formulario para cargar un nuevo modelo a la base de datos</p>
     </div>
     <div class="form-label-group text-left mb-3">
-        <label for="inputName">Nombre</label>
-        <input type="text" id="inputName" class="form-control" placeholder="Nombre" required="" autofocus="" ng-model="addForm.name" pattern="[A-Za-z0-9]+">
+        <label for="inputName">Nombre <span class="text-muted font-weight-light">(Alfanumérico, entre 3 y 32 caracteres)</span></label>
+        <input type="text" id="inputName" class="form-control" placeholder="Nombre" required="" autofocus="" ng-model="addForm.name" pattern="[A-Za-z0-9 ]+" minlength="3" maxlength="32">
     </div>
 
     <div class="form-label-group text-left mb-3">
@@ -15,8 +15,9 @@
     </div>
 
     <div class="form-label-group text-left mb-3">
-        <label for="inputMaterial">Archivo de materiales (Opcional)</label>
+        <label for="inputMaterial">Archivo de materiales <span class="text-muted font-weight-light">(Opcional)</span></label>
         <input type="file" id="inputMaterial" class="form-control" placeholder="Ruta del archivo" accept=".mtl" fileread="addForm.mtl">
+        <p ng-if="addForm.mtl" class="alert alert-info my-1" role="alert">¡Aviso! Este visor solo es compatible con archivos .mtl con todos los recursos incrustados.</p>
     </div>
     <button class="btn btn-lg btn-primary btn-block" type="submit" ng-disabled="uploading"><span ng-if="uploading">Subiendo...</span><span ng-if="!uploading">Subir</span></button>
 </form>

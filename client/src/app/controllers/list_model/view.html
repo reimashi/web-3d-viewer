@@ -13,16 +13,16 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="model in models">
-                    <td>{{model.id}}</td>
-                    <td>{{model.name}}</td>
-                    <td>
+                    <td class="align-middle">{{model.id}}</td>
+                    <td class="align-middle">{{model.name}}</td>
+                    <td class="align-middle">
                         <span class="badge badge-info" ng-if="model.obj">OBJ <span ng-if="model.obj_size" class="badge badge-light">{{model.obj_size | bytes}}</span></span>
                         <span class="badge badge-info" ng-if="model.mtl">MTL <span ng-if="model.mtl_size" class="badge badge-light">{{model.mtl_size | bytes}}</span></span>
                     </td>
-                    <td>
-                        <a class="btn btn-info" title="Previsualizar" href="#!/model/{{model.id}}">Previsualizar</a>
-                        <button class="btn btn-primary" title="Descargar" ng-click="download(model.id)">Descargar</button>
-                        <button class="btn btn-danger" title="Borrar" ng-click="delete(model.id)">Borrar</button>
+                    <td class="align-middle">
+                        <a class="btn btn-info my-1" title="Previsualizar" href="#!/model/{{model.id}}">Previsualizar</a>
+                        <button class="btn btn-primary my-1" title="Descargar" ng-click="download(model.id)">Descargar</button>
+                        <button class="btn btn-danger my-1" title="Borrar" ng-click="delete(model.id)">Borrar</button>
                     </td>
                 </tr>
                 </tbody>
