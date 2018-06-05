@@ -7,8 +7,9 @@
     <groupId>com.github.reimashi</groupId>
     <artifactId>web-3d-viewer-server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
     <url>https://github.com/reimashi/web-3d-viewer</url>
+
+    <packaging>jar</packaging>
 
     <scm>
         <connection>scm:git:https://github.com/reimashi/web-3d-viewer.git</connection>
@@ -91,6 +92,31 @@
                 <configuration>
                     <goals>install</goals>
                 </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <finalName>server</finalName>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <archive>
+                        <manifest>
+                            <mainClass>Main</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>create-archive</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

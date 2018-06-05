@@ -26,7 +26,7 @@ public class Main {
         }
 
         if (System.getenv().containsKey("WEB_USER")) {
-            WEB_USER =System.getenv("WEB_USER");
+            WEB_USER = System.getenv("WEB_USER");
         }
 
         if (System.getenv().containsKey("WEB_PASS")) {
