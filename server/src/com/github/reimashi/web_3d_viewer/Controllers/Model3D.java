@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Request;
 import spark.Response;
+import spark.Service;
 import spark.Spark;
 
 import java.io.*;
@@ -26,13 +27,15 @@ public class Model3D {
     public static File UPLOAD_DIR = new File(UPLOAD_DIR_NAME);
     private static final Logger LOG = LoggerFactory.getLogger(Model3D.class);
 
-    public static void init() {
+    public static void init(Service service) {
         UPLOAD_DIR.mkdir(); // create the upload directory if it doesn't exist
 
-        Spark.post("/model", "application/json", controllers.Model3D::postOne, new JsonTransformer());
-        Spark.get("/model/:id", "application/json", controllers.Model3D::getOne, new JsonTransformer());
-        Spark.get("/model", "application/json", controllers.Model3D::getAll, new JsonTransformer());
-        Spark.delete("/model/:id", "application/json", controllers.Model3D::deleteOne);
+        service.path("/model", () -> {
+            service.post("", "application/json", controllers.Model3D::postOne, new JsonTransformer());
+            service.get("/:id", "application/json", controllers.Model3D::getOne, new JsonTransformer());
+            service.get("", "application/json", controllers.Model3D::getAll, new JsonTransformer());
+            service.delete("/:id", "application/json", controllers.Model3D::deleteOne);
+        });
     }
 
     /**
