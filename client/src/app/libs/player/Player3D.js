@@ -1,4 +1,3 @@
-import ResObserver from './ResizeObserver';
 import {
     AmbientLight,
     Box3,
@@ -28,9 +27,13 @@ class Player3D {
         this.container = domElement;
 
         this.fps = 25;
+        this.aspectRatio = 16 / 9;
 
         this.width = this.container.offsetWidth;
-        this.height = this.container.offsetHeight;
+        let height = this.width / this.aspectRatio;
+        this.container.setAttribute("style","display:block; height:" + this.height + "px");
+        this.container.style.height = this.height + "px";
+        this.height = height;
 
         this._log("Renderizando en contenedor de", this.width, "x", this.height);
 
@@ -65,8 +68,7 @@ class Player3D {
         this.container.appendChild(this.renderer.domElement);
 
         document.addEventListener('mousemove', Player3D.onDocumentMouseMove(this), false);
-        this.resizeObserver = new ResObserver(Player3D.onElementResize(this));
-        this.resizeObserver.observe(this.container);
+        window.addEventListener('resize', Player3D.onElementResize(this));
 
         this._eventEmitter.emit("loaded");
     }
@@ -138,17 +140,24 @@ class Player3D {
      */
     static onElementResize(context) { return () => {
         context.width = context.container.offsetWidth;
-        context.height = context.container.offsetHeight;
+        let height = context.width / context.aspectRatio;
+        context.container.setAttribute("style","display:block; height:" + context.height + "px");
+        context.container.style.height = context.height + "px";
+        context.height = height;
 
         context.center = {
             x: context.width / 2,
             y: context.height / 2
         };
 
+        while (context.container.firstChild) {
+            context.container.removeChild(context.container.firstChild);
+        }
+        context.renderer.setSize(context.width, context.height);
+        context.container.appendChild(context.renderer.domElement);
+
         context.camera.aspect = context.width / context.height;
         context.camera.updateProjectionMatrix();
-
-        //context.renderer.setSize(context.width, context.height);
     }}
 
     /**
