@@ -14,6 +14,8 @@ angular.module('3dviewer.view_model', ['ngRoute'])
 
     .controller('ViewModelCtrl', ["$scope", "$routeParams", "$http", "$timeout", function($scope, $routeParams, $http, $timeout) {
         $scope.loadingPlayer = true;
+        $scope.modelInfo = null;
+        $scope.errorMsg = false;
 
         /**
          * Load a model to the 3D player
@@ -37,7 +39,12 @@ angular.module('3dviewer.view_model', ['ngRoute'])
             });
 
             // Load the model
-            player.loadObj("/" + model.obj);
+            if (model.mtl !== undefined && model.mtl !== null && String(model.mtl).length > 0) {
+                player.loadMTL("/" + model.obj, "/" + model.mtl);
+            }
+            else {
+                player.loadObj("/" + model.obj);
+            }
         };
 
         /**
@@ -48,11 +55,12 @@ angular.module('3dviewer.view_model', ['ngRoute'])
             let resPromise = $http.get("/model/" + id);
 
             resPromise.then(function(response) {
+                $scope.modelInfo = response.data;
                 loadModelPlayer(response.data);
             });
 
             resPromise.catch(function(error) {
-                console.error(error);
+                $scope.errorMsg = "Ha ocurrido un error al descargar el modelo.";
             });
         };
 

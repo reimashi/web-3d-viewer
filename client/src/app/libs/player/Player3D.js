@@ -1,16 +1,17 @@
 import ResObserver from './ResizeObserver';
 import {
     AmbientLight,
-    Loader,
+    Box3,
     LoadingManager,
     PerspectiveCamera,
     PointLight,
-    Scene,
+    Scene, Vector3,
     WebGLRenderer,
 } from 'three';
 import EventEmitter from "./EventEmitter";
 import TrackballControls from "./TrackballControls";
 import OBJLoader from "./OBJLoader";
+import MTLLoader from "./MTLLoader";
 
 /**
  * 3D Model player over threejs and webGl
@@ -36,9 +37,8 @@ class Player3D {
         this.center = { x: this.width / 2, y: this.height / 2 };
         this.mouse = { x: this.center.x, y: this.center.y };
 
-        this.camera = new PerspectiveCamera(45, this.width / this.height, 1, 2000);
+        this.camera = new PerspectiveCamera(45, this.width / this.height, 1, 2500);
         this.camera.position.z = 250;
-        this.camera.position.y = -(this.height / 2) + 20;
 
         this.scene = new Scene();
 
@@ -91,6 +91,11 @@ class Player3D {
 
         let loader = new OBJLoader(manager);
         loader.load(url, function (object) {
+            let box = new Box3().setFromObject(object);
+            let objectSize = new Vector3();
+            box.getSize(objectSize);
+            object.position.y -= objectSize.y / 2;
+
             context.scene.add(object);
             context.control.reset();
             context._eventEmitter.emit("model-loaded");
@@ -108,15 +113,21 @@ class Player3D {
         let manager = new LoadingManager();
         manager.onProgress = console.log;
 
-        let loader = new Loader.MTLLoader();
+        let loader = new MTLLoader();
         loader.load(mtlUrl, function (materials) {
             materials.preload();
-            new Loader.OBJLoader()
+            new OBJLoader()
                 .setMaterials(materials)
                 .load(objUrl, function (object) {
-                    object.position.y = - 95;
+                    let box = new Box3().setFromObject(object);
+                    let objectSize = new Vector3();
+                    box.getSize(objectSize);
+                    object.position.y -= objectSize.y / 2;
+
                     context.scene.add(object);
-                }, onProgress, onError);
+                    context.control.reset();
+                    context._eventEmitter.emit("model-loaded");
+                }, manager.onProgress, manager.onError);
         } );
     }
 
