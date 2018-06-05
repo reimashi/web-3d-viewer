@@ -11,6 +11,7 @@ angular.module('3dviewer.add_model', ['ngRoute'])
     }])
 
     .controller('AddModelCtrl', ["$scope", "$http", function($scope, $http) {
+        $scope.errorMsg = false;
         $scope.addForm = { name: "", obj: null, mtl: null };
         $scope.uploading = false;
 
@@ -20,6 +21,7 @@ angular.module('3dviewer.add_model', ['ngRoute'])
          */
         $scope.upload = function(formData) {
             $scope.uploading = true;
+            $scope.errorMsg = false;
 
             let requestPromise = $http.post("/model", formData);
 
@@ -31,7 +33,7 @@ angular.module('3dviewer.add_model', ['ngRoute'])
 
             requestPromise.catch(function(error) {
                 $scope.uploading = false;
-                console.error(error);
+                $scope.errorMsg = "Ha ocurrido un error al subir el modelo. Vuelve a intentarlo.";
             });
         }
     }]);

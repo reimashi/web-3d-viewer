@@ -19,6 +19,7 @@
         <input type="file" id="inputMaterial" class="form-control" placeholder="Ruta del archivo" accept=".mtl" fileread="addForm.mtl">
         <p ng-if="addForm.mtl" class="alert alert-info my-1" role="alert">¡Aviso! Este visor solo es compatible con archivos .mtl con todos los recursos incrustados.</p>
     </div>
+    <div ng-if="errorMsg" class="alert alert-danger" role="alert">{{errorMsg}}</div>
     <button class="btn btn-lg btn-primary btn-block" type="submit" ng-disabled="uploading"><span ng-if="uploading">Subiendo...</span><span ng-if="!uploading">Subir</span></button>
 </form>
 </main>
