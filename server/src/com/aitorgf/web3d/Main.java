@@ -15,6 +15,7 @@ public class Main {
     private static int WEB_PORT = 4080;
     private static String WEB_USER = "admin";
     private static String WEB_PASS = "admin";
+    private static Boolean WEB_AUTH_ENABLE = false;
     private static String STATIC_PATH = "../client/dist";
 
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
@@ -39,6 +40,12 @@ public class Main {
             WEB_PASS = System.getenv("WEB_PASS");
         }
 
+        if (System.getenv().containsKey("WEB_AUTH_ENABLE")
+                && (System.getenv("WEB_AUTH_ENABLE") == "1"
+                || System.getenv("WEB_AUTH_ENABLE").toLowerCase() == "true")) {
+            WEB_AUTH_ENABLE = true;
+        }
+
         if (System.getenv().containsKey("STATIC_PATH")
                 && System.getenv("STATIC_PATH").trim().length() > 0
                 && System.getenv("STATIC_PATH") != "0") {
@@ -58,7 +65,9 @@ public class Main {
         service.port(WEB_PORT);
 
         // Basic authentication
-        service.before(new BasicAuthenticationFilter(new AuthenticationDetails(WEB_USER, WEB_PASS)));
+        if (WEB_AUTH_ENABLE) {
+            service.before(new BasicAuthenticationFilter(new AuthenticationDetails(WEB_USER, WEB_PASS)));
+        }
 
         // Serve client files
         try {

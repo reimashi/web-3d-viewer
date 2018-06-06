@@ -40,6 +40,7 @@ LABEL maintainer="Aitor González Fernández <info@aitorgf.com>"
 ENV WEB_PORT=4080
 ENV WEB_USER=admin
 ENV WEB_PASS=admin
+ENV WEB_AUTH_ENABLE=false
 ENV STATIC_PATH=/client
 ENV DATABASE_PATH=/database
 

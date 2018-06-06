@@ -10,6 +10,7 @@ services:
       WEB_PORT: 4080
       WEB_USER: admin
       WEB_PASS: admin
+      WEB_AUTH_ENABLE: false
       STATIC_PATH: /client
       DATABASE_PATH: /database
     labels:
