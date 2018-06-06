@@ -14,10 +14,8 @@ RUN yarn global add webpack webpack-cli
 WORKDIR /app
 COPY ./client .
 
-RUN yarn
-
-RUN mkdir -p /dist
-RUN webpack-cli --env.BuildDir=/dist --config webpack.config.js
+RUN yarn install
+RUN webpack-cli --config webpack.config.js
 
 # Build server
 FROM maven:3.5-jdk-8 as server-builder
@@ -32,7 +30,7 @@ RUN mvn dependency:resolve
 RUN mvn package
 
 # Deploy runtime
-FROM openjdk:8-jre-alpine
+FROM openjdk:10-jre-slim
 
 LABEL web="https://github.com/reimashi/web-3d-viewer"
 LABEL maintainer="Aitor González Fernández <info@aitorgf.com>"
@@ -50,7 +48,7 @@ RUN mkdir -p ${DATABASE_PATH}
 VOLUME ${DATABASE_PATH}
 
 WORKDIR ${STATIC_PATH}
-COPY --from=client-builder /dist .
+COPY --from=client-builder /app/dist .
 RUN mkdir -p ${STATIC_PATH}/models
 VOLUME ${STATIC_PATH}/models
 
