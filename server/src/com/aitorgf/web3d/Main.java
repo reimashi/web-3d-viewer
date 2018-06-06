@@ -21,23 +21,33 @@ public class Main {
 
     public static void main(String[] args) {
         // Load configuration from environment variables, for docker integration
-        if (System.getenv().containsKey("WEB_PORT")) {
+        if (System.getenv().containsKey("WEB_PORT")
+                && System.getenv("WEB_PORT").trim().length() > 0
+                && System.getenv("WEB_PORT") != "0") {
             WEB_PORT = Integer.parseInt(System.getenv("WEB_PORT"));
         }
 
-        if (System.getenv().containsKey("WEB_USER")) {
+        if (System.getenv().containsKey("WEB_USER")
+                && System.getenv("WEB_USER").trim().length() > 0
+                && System.getenv("WEB_USER") != "0") {
             WEB_USER = System.getenv("WEB_USER");
         }
 
-        if (System.getenv().containsKey("WEB_PASS")) {
+        if (System.getenv().containsKey("WEB_PASS")
+                && System.getenv("WEB_PASS").trim().length() > 0
+                && System.getenv("WEB_PASS") != "0") {
             WEB_PASS = System.getenv("WEB_PASS");
         }
 
-        if (System.getenv().containsKey("STATIC_PATH")) {
+        if (System.getenv().containsKey("STATIC_PATH")
+                && System.getenv("STATIC_PATH").trim().length() > 0
+                && System.getenv("STATIC_PATH") != "0") {
             WEB_PASS = System.getenv("STATIC_PATH");
         }
 
-        if (System.getenv().containsKey("DATABASE_PATH")) {
+        if (System.getenv().containsKey("DATABASE_PATH")
+                && System.getenv("DATABASE_PATH").trim().length() > 0
+                && System.getenv("DATABASE_PATH") != "0") {
             models.Connector.DB_FILE_PATH = System.getenv("DATABASE_PATH");
         }
 
