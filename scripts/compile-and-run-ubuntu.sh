@@ -2,22 +2,18 @@
 
 REPO=https://github.com/reimashi/web-3d-viewer.git
 
-# As root
-sudo su
-
 # Install dependencies
-apt update
-apt install apt-transport-https openjdk-8-jdk git -y
+sudo apt update
+sudo apt install apt-transport-https openjdk-8-jdk git -y
 
-curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
-    echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
-    apt-get update && \
-    apt-get install --no-install-recommends yarn -y
+curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
 
-yarn global add webpack-cli
+sudo apt-get update
+sudo apt-get install --no-install-recommends yarn nodejs -y
 
-# Exit root
-exit
+sudo yarn global add webpack webpack-cli
 
 # Get the code
 git clone "${REPO}" repo
