@@ -1,6 +1,14 @@
 # Build client
 FROM node:latest as client-builder
 
+ENV WEB_PORT 4080
+ENV WEB_USER admin
+ENV WEB_PASS admin
+ENV STATIC_PATH /client
+ENV DATABASE_PATH /database
+
+EXPOSE ${WEB_PORT}/tcp
+
 RUN apt-get update && \
     apt-get install apt-transport-https -y
 
@@ -34,10 +42,19 @@ RUN mvn package
 # Deploy runtime
 FROM openjdk:8-jre-alpine
 
-WORKDIR /client
+LABEL web="https://github.com/reimashi/web-3d-viewer"
+LABEL maintainer="Aitor González Fernández <info@aitorgf.com>"
+
+RUN mkdir -p ${DATABASE_PATH}
+VOLUME ${DATABASE_PATH}
+
+WORKDIR ${STATIC_PATH}
 COPY --from=client-builder /dist .
+RUN mkdir -p ${STATIC_PATH}/models
+VOLUME ${STATIC_PATH}/models
 
 WORKDIR /server
 COPY --from=server-builder /usr/src/app/target/server.jar .
 
 ENTRYPOINT ["java", "-jar", "server.jar"]
+HEALTHCHECK --interval=5m --timeout=3s CMD curl -f http://localhost:${WEB_PORT} || exit 1
