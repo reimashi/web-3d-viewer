@@ -1,14 +1,6 @@
 # Build client
 FROM node:latest as client-builder
 
-ENV WEB_PORT 4080
-ENV WEB_USER admin
-ENV WEB_PASS admin
-ENV STATIC_PATH /client
-ENV DATABASE_PATH /database
-
-EXPOSE ${WEB_PORT}/tcp
-
 RUN apt-get update && \
     apt-get install apt-transport-https -y
 
@@ -44,6 +36,14 @@ FROM openjdk:8-jre-alpine
 
 LABEL web="https://github.com/reimashi/web-3d-viewer"
 LABEL maintainer="Aitor González Fernández <info@aitorgf.com>"
+
+ENV WEB_PORT=4080
+ENV WEB_USER=admin
+ENV WEB_PASS=admin
+ENV STATIC_PATH=/client
+ENV DATABASE_PATH=/database
+
+EXPOSE ${WEB_PORT}/tcp
 
 RUN mkdir -p ${DATABASE_PATH}
 VOLUME ${DATABASE_PATH}

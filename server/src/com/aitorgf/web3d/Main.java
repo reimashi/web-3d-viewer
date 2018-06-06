@@ -42,7 +42,7 @@ public class Main {
         if (System.getenv().containsKey("STATIC_PATH")
                 && System.getenv("STATIC_PATH").trim().length() > 0
                 && System.getenv("STATIC_PATH") != "0") {
-            WEB_PASS = System.getenv("STATIC_PATH");
+            STATIC_PATH = System.getenv("STATIC_PATH");
         }
 
         if (System.getenv().containsKey("DATABASE_PATH")
