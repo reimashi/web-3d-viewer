@@ -16,12 +16,14 @@ import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.Base64;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * REST API for handle models
  */
 public class Model3D {
-    private static final String BASE64_PREFIX = "data:;base64,";
+    private static final String BASE64_PREFIX_PATTERN = "^data:.*;base64,(.+)$";
     public static final String UPLOAD_DIR_NAME = "models";
 
     public static File UPLOAD_DIR = new File(UPLOAD_DIR_NAME);
@@ -138,27 +140,44 @@ public class Model3D {
             Gson gson = new GsonBuilder().create();
             Model3DBean modelInstance = gson.fromJson(req.body(), Model3DBean.class);
 
+            // Make base64 string matcher
+            Pattern base64pattern = Pattern.compile(BASE64_PREFIX_PATTERN);
+
             // Syntax and data check
             if (modelInstance.Name.length() < 1) {
                 Spark.halt(400, "Name is required"); return null;
             }
-            if (modelInstance.Obj == null || Objects.equals(modelInstance.Obj, "") || !modelInstance.Obj.contains(BASE64_PREFIX)) {
+            if (modelInstance.Obj == null || Objects.equals(modelInstance.Obj, "") || ! base64pattern.matcher(modelInstance.Obj).matches()) {
                 Spark.halt(400, "Obj is required and may be a Base64 string"); return null;
             }
             if (modelInstance.Mtl == null || Objects.equals(modelInstance.Mtl, "")) {
                 modelInstance.Mtl = null;
             }
-            else if (!modelInstance.Mtl.contains(BASE64_PREFIX)) {
+            else if (!base64pattern.matcher(modelInstance.Mtl).matches()) {
                 Spark.halt(400, "Mtl may be a Base64 string"); return null;
             }
 
             models.Model3D db = new models.Model3D();
 
             // Convert base64 data to binary and save temporary in memory
-            byte[] objContent = Base64.getDecoder().decode(modelInstance.Obj.substring(BASE64_PREFIX.length()));
-            modelInstance.Obj = null;
-            byte[] mtlContent = modelInstance.Mtl == null ? null : Base64.getDecoder().decode(modelInstance.Mtl.substring(BASE64_PREFIX.length()));
-            modelInstance.Mtl = null;
+            byte[] objContent = null;
+            Matcher objMatcher = base64pattern.matcher(modelInstance.Obj);
+            if (objMatcher.find()) {
+                objContent = Base64.getDecoder().decode(objMatcher.group(1));
+                modelInstance.Obj = null;
+            } else {
+                LOG.warn("If OBJ match, must be found");
+            }
+            byte[] mtlContent = null;
+            if (modelInstance.Mtl != null) {
+                Matcher mtlMatcher = base64pattern.matcher(modelInstance.Mtl);
+                if (mtlMatcher.find()) {
+                    mtlContent = modelInstance.Mtl == null ? null : Base64.getDecoder().decode(mtlMatcher.group(1));
+                    modelInstance.Mtl = null;
+                } else {
+                    LOG.warn("If MTL match, must be found");
+                }
+            }
 
             // Insert model in DB to generate id
             modelInstance = db.addOne(modelInstance);
